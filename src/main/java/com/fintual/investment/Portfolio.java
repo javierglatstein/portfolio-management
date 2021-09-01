@@ -1,5 +1,7 @@
 package com.fintual.investment;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
@@ -45,7 +47,7 @@ public class Portfolio {
             profit += endPrice - startPrice;
         }
 
-        return profit;
+        return round(profit,2);
     }
 
     /**
@@ -60,6 +62,13 @@ public class Portfolio {
             return 0;
         }
 
-        return getProfit(first, second) * DAYS_IN_YEAR / Math.abs(DAYS.between(first, second));
+        double annualized = getProfit(first, second) * DAYS_IN_YEAR / Math.abs(DAYS.between(first, second));
+        return round(annualized,2 );
+    }
+
+    private double round(double value, int places) {
+        BigDecimal bdProfit = BigDecimal.valueOf(value);
+        bdProfit = bdProfit.setScale(places, RoundingMode.HALF_UP);
+        return bdProfit.doubleValue();
     }
 }
